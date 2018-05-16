@@ -49,9 +49,10 @@ Dependences
 - angr
 - pwntools
 
-Todo
+Todo (Exploit techniques)
 ----
-- ROP (ret2libc)
+- [x] shellcode (ret2stack)
+- [ ] ROP (ret2libc)
 
 Reference
 ----
