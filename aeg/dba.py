@@ -7,7 +7,7 @@ class DBA(object):
 
     def __init__(self, binary):
         self.binary = binary
-        self.path = None
+        self.state = None
 
     def _binary_info(self):
         #pwntools
@@ -27,16 +27,17 @@ class DBA(object):
             i = i + 1
 
     def _find_symbolic_buffer(self):
-        state = self.path.state
-        #stdin = state.posix.stdin
-        stdin_file = self.path.posix.get_file(0)
+        state = self.state
+
+        stdin = state.posix.stdin
+        #stdin_file = self.path.posix.get_file(0)
         
 
         sym_addrs = []
-        for var in stdin_file.variables():
-            sym_addrs.extend(state.memory.addrs_for_name(var))
-        #for _, symbol in state.solver.get_variables('file', stdin.ident):
-        #    sym_addrs.extend(state.memory.addrs_for_name(next(iter(symbol.variables))))
+        #for var in stdin_file.variables():
+        #    sym_addrs.extend(state.memory.addrs_for_name(var))
+        for _, symbol in state.solver.get_variables('file', stdin.ident):
+            sym_addrs.extend(state.memory.addrs_for_name(next(iter(symbol.variables))))
         
         buffer = []
         for addr in sym_addrs:
@@ -46,14 +47,14 @@ class DBA(object):
 
 
     def _analyze(self):
-        state = self.path.state
+        state = self.state
         self._binary_info()
         self.result['arch'] = state.arch.name
         self.result['buffer'] = self._find_symbolic_buffer()
 
 
-    def analyze(self, path):
-        self.path = path
+    def analyze(self, state):
+        self.state = state
         self.result = {
             'arch': '',
             'buffer': [],
