@@ -3,7 +3,7 @@ from pwn import *
 
 l = logging.getLogger("aeg.verify")
 l.setLevel("INFO")
-HOST = 0.0.0.0
+HOST = "127.0.0.1"
 PORT = 31337
 class Verify(object):
 
